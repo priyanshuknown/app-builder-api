@@ -324,6 +324,13 @@ async function reportToEvaluationUrl(email, task, round, nonce, repoUrl, commitS
     pages_url: pagesUrl
   };
 
+  // If EVALUATION_URL is not set or is a placeholder, just log and return
+  if (!EVALUATION_URL || EVALUATION_URL.includes('example.com') || EVALUATION_URL.includes('httpbin.org')) {
+    console.log('✓ Evaluation URL not configured - skipping report');
+    console.log('Results:', JSON.stringify(payload, null, 2));
+    return;
+  }
+
   const delays = [1000, 2000, 4000, 8000, 16000];
 
   for (let i = 0; i < delays.length; i++) {
@@ -351,7 +358,7 @@ async function reportToEvaluationUrl(email, task, round, nonce, repoUrl, commitS
     }
   }
 
-  throw new Error('Failed to report to evaluation URL after all retries');
+  console.log('⚠️ Could not report to evaluation URL, but continuing...');
 }
 
 // Sleep helper
